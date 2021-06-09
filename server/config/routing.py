@@ -1,6 +1,6 @@
 from flask.views import MethodView
 from flask import render_template, session, g 
-
+from .models import Admin
 class Login(MethodView):
     """ This class is to handle login (limited to admins)"""
 

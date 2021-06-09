@@ -18,5 +18,5 @@ jobs:
           name: run tests
           command: |
             . dev/bin/activate
-            cd server/tests
+            cd server/
             python -m unittest
