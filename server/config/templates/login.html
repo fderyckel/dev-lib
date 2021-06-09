@@ -1,12 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <title>Library Management System</title>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="../static/util.css">
+    <link rel="stylesheet" type="text/css" href="../static/main.css">
 </head>
-<body>
-    <h1>Hello from login page</h1>
+
+<body style="background-color: #c2adc5;">
+
+    <div class="limiter">
+        <div class="container-login100">
+            <div class="login100-more"
+                style="background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQTNWesJyMzuZR9007kf_Z9G7N128cckJS9KQ&usqp=CAU');">
+            </div>
+
+            <div class="wrap-login100 p-l-50 p-r-50 p-t-72 p-b-50">
+                <form class="login100-form validate-form" method="POST">
+                    <span class="login100-form-title p-b-59">
+                        Library Management System
+                    </span>
+                    <span class="login100-form-title1 p-b-59">
+                        Login
+                    </span>
+
+                    <div class="wrap-input100 validate-input" data-validate="Username is required">
+                        <span class="label-input100">Email</span>
+                        <input class="input100" type="text" name="email" placeholder="Enter your Email">
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <div class="wrap-input100 validate-input" data-validate="Password is required">
+                        <span class="label-input100">Password</span>
+                        <input class="input100" type="password" name="password" placeholder="Enter password">
+                        <h3>{{error}}</h3>
+                        <span class="focus-input100"></span>
+                    </div>
+
+                    <div class="container-login100-form-btn">
+                        <div class="wrap-login100-form-btn">
+
+
+                            <div class="login100-form-bgbtn"></div>
+
+
+                            <button class="login100-form-btn" type="submit">
+                                Login
+                            </button>
+
+
+                        </div>
+
+                        <!-- <a href="/signup" class="dis-block txt3 hov1 p-r-30 p-t-10 p-b-10 p-l-30">
+							Not registered yet?
+							<i class="fa fa-long-arrow-right m-l-5"></i>
+						</a> -->
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 </body>
+
 </html>

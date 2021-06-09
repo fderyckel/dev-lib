@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/home.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;1,700&display=swap" rel="stylesheet">
+    <title>Issue Books</title>
+</head>
+<body>
+    
+    <!-- Header begins -->
+<style>
+    input[type=text]{
+    width:100%;
+    border:2px solid #aaa;
+    border-radius:4px;
+    margin:8px 0;
+    outline:none;
+    padding:8px;
+    box-sizing:border-box;
+    transition:.3s;
+  }
+  
+  input[type=text]:focus{
+    border-color:#f2dac3;
+    box-shadow:0 0 8px 0 #f2dac3;
+  }
+</style>
+
+    <section id="header">
+        <div class="header container">
+            <div class="nav-bar">
+                <div class="brand">
+                    <a href="#hero"><h1><span>Library </span>Management</h1></a>
+                </div>
+                <div class="nav-list">
+                    <div class="hamburger"><div class="bar"></div></div>
+                    <ul>
+                        <li><a href="" data-after="">HOME</a></li>
+                        <li><a href="" data-after="">BOOK RETURN</a></li>
+                        <li><a href="" data-after="">BOOK STATUS</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Header ends -->
+
+
+  <!-- Hero Section  -->
+    <section id="hero">
+
+        <div class="hero container">
+            <div>
+                <h1>To Issue Books Fill In The Form<span></span></h1>
+        <form id="sympform" action="" method="post" >
+            <label for="name" style="font-size: x-large; color: #f2dac3;">Name</label>
+            <input type="text" id="name" name="name" style="	outline: none; border: none;"><br><br>
+
+            <label for="id" style="font-size: x-large; color: #f2dac3;">Email ID</label>
+            <input type="text" id="id" name="id" style="	outline: none; border: none;"><br><br>
+
+            <label for="book" style="font-size: x-large; color: #f2dac3;">Book Name</label>
+            <input type="text" id="book" name="book" style="	outline: none; border: none;"><br><br>
+
+            <label for="date" style="font-size: x-large; color: #f2dac3;">Issue Date</label>
+            <input type="text" id="date" name="date" style="	outline: none; border: none;"><br><br>
+
+            <button class="cta" style="margin-top: 10px;" type="submit" name="b">Search</button>
+        </form>
+
+
+                
+      </div>
+      <div class="gif">
+        <img src="../static/Dragon Boat Festival-cuate.svg" style="margin-left: 100px;width: 500px;height: 500px;">
+      </div>
+    </section>
+    
+  <!-- End Hero Section  -->
