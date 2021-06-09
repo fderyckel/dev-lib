@@ -24,6 +24,7 @@ class Issues(db.Model):
     user_email = db.Column(db.String(250), nullable=False, unique=True)
     book_name = db.Column(db.String(30), nullable=False)
     book_id = db.Column(db.Integer, nullable=False)
+    isbn = db.Column(db.Integer, nullable=False)
     debt = db.Column(db.Integer)
     issue_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 

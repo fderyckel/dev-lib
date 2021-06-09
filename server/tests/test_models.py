@@ -1,6 +1,5 @@
-from datetime import datetime
 from unittest import TestCase
-from config.models import Admin, Issues
+from config.models import Admin, Issues 
 
 
 class TestAdminModel(TestCase):

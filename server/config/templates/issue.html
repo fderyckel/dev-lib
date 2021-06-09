@@ -37,9 +37,9 @@
                 <div class="nav-list">
                     <div class="hamburger"><div class="bar"></div></div>
                     <ul>
-                        <li><a href="" data-after="">HOME</a></li>
+                        <li><a href="/home" data-after="">HOME</a></li>
                         <li><a href="" data-after="">BOOK RETURN</a></li>
-                        <li><a href="" data-after="">BOOK STATUS</a></li>
+                        <li><a href="/" data-after="">LOGOUT</a></li>
                     </ul>
                 </div>
             </div>
@@ -55,19 +55,30 @@
             <div>
                 <h1>To Issue Books Fill In The Form<span></span></h1>
         <form id="sympform" action="" method="post" >
-            <label for="name" style="font-size: x-large; color: #f2dac3;">Name</label>
-            <input type="text" id="name" name="name" style="	outline: none; border: none;"><br><br>
+            <label for="name" style="font-size: x-large; color: #f2dac3;">Debt</label>
+            <input type="text" id="name" name="debt" style="	outline: none; border: none;"><br><br>
 
             <label for="id" style="font-size: x-large; color: #f2dac3;">Email ID</label>
-            <input type="text" id="id" name="id" style="	outline: none; border: none;"><br><br>
+            <input type="text" id="id" name="email" style="	outline: none; border: none;"><br><br>
 
-            <label for="book" style="font-size: x-large; color: #f2dac3;">Book Name</label>
-            <input type="text" id="book" name="book" style="	outline: none; border: none;"><br><br>
+            <label for="book" style="font-size: x-large; color: #f2dac3;">Title</label>
+            <input type="text" id="book" name="title" style="	outline: none; border: none;"><br><br>
 
-            <label for="date" style="font-size: x-large; color: #f2dac3;">Issue Date</label>
-            <input type="text" id="date" name="date" style="	outline: none; border: none;"><br><br>
+            <label for="date" style="font-size: x-large; color: #f2dac3;">ISBN</label>
+            <input type="text" id="date" name="isnb" style="	outline: none; border: none;"><br><br>
 
             <button class="cta" style="margin-top: 10px;" type="submit" name="b">Search</button>
+             {% if multiple %}
+                <h2>Isbn entred does not match the book title.</h2>
+             {% endif %}
+            
+            {% if not_available %}
+                {% if taken %}
+                    <H1>Book Taken</H1>
+                {% endif %}
+                <h1>NOT AVAILABLE</h1>
+            {% endif %}
+        
         </form>
 
 
