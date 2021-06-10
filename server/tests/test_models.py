@@ -1,6 +1,6 @@
 from unittest import TestCase
-from config.models import Admin, Issues 
-
+from config import db
+from config.models import Admin, Issues, Member 
 
 class TestAdminModel(TestCase):
     def test_valid_entry(self):
@@ -24,26 +24,23 @@ class TestIssueModel(TestCase):
 
     @classmethod
     def setUpClass(cls):
-        issue = Issues(user_email='testissue@gmail.com',
-                       book_name='testbook', book_id=1231, debt=None)
-        cls.issue = issue
+
+
+        cls.member = Member(user_email='localhost@gmail.com', debt=10)
+        db.session.add(cls.member)
+        db.session.commit()
+        cls.issue = Issues(isbn=123, user=cls.member.id)
 
     def test_valid_entry(self):
         self.assertIsInstance(self.issue, Issues)
 
     def invalid():
-        Issues(user_email='testissue@gmail.com',
-               book_name='testbook', book_id=None, debt=None)
+        Issues(isbn=123123)
 
     def test_invalid_entry(self):
         self.assertRaises(TypeError, self.invalid)
 
-    def test_unique(self):
-        self.assertEqual(str(self.issue), 'testissue@gmail.com')
-
     @classmethod
     def tearDownClass(cls):
-        pass
-
-class TestMemberModel(db.Model):
-    pass
+        db.session.delete(cls.member)
+        db.session.commit()
