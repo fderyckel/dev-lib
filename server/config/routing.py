@@ -1,7 +1,9 @@
 
 from flask.views import MethodView
 from config import app, db
-from flask import render_template, session, g, request, redirect, url_for
+from flask import (
+    render_template, session, g, request, redirect, url_for, Response
+)
 from .models import Admin
 import jwt
 import os
@@ -37,7 +39,7 @@ class LoginView(MethodView):
     def get(self) -> None:
         """This function is used to render login template"""
         session.pop("user_email", None)
-        return render_template(self.template_name_get)
+        return render_template(self.template_name_get), 200
 
     def post(self) -> None:
         """ 
@@ -51,10 +53,10 @@ class LoginView(MethodView):
         if user:
             if user.password == password:
                 session['user_email'] = email
-                return redirect(url_for('home'))
+                return redirect(url_for('home'), 302)
             else:
-                return render_template(self.template_name_get, error='Invalid password')
-        return render_template(self.template_name_get, error='Invalid User')
+                return render_template(self.template_name_get, error='Invalid password'), 400
+        return render_template(self.template_name_get, error='Invalid User'), 400
 
 
 class HomeView(MethodView):
@@ -70,9 +72,9 @@ class HomeView(MethodView):
         Renders the home page on a get request
         """
         if g.user:
-            return render_template(self.template_name)
+            return render_template(self.template_name), 200
 
-        return redirect('/')
+        return redirect('/', 302)
 
 
 class IssueView(MethodView):
@@ -88,8 +90,8 @@ class IssueView(MethodView):
         Renders the page if user is logged
         """
         if g.user:
-            return render_template(self.template_name)
-        return redirect('/')
+            return render_template(self.template_name), 200
+        return redirect('/', 302)
 
     def post(self) -> render_template:
         """
@@ -154,13 +156,13 @@ class CallBack(MethodView):
                 "SECRET_KEY"), algorithms='HS256')
             try:
                 title = payload['message'][0]['title']
-                return render_template(self.template_name, book_name=title)
+                return render_template(self.template_name, book_name=title), 200
 
             except Exception as e:
                 email, isbn = payload['email'], payload['isbn']
-                return render_template(self.template_name, delete=True, isbn=isbn, email=email)
+                return render_template(self.template_name, delete=True, isbn=isbn, email=email), 200
 
-        return redirect('/')
+        return redirect('/', 302)
 
 
 class ReturnView(MethodView):
@@ -173,8 +175,8 @@ class ReturnView(MethodView):
 
     def get(self) -> render_template:
         if g.user:
-            return render_template(self.template_name)
-        return redirect('/')
+            return render_template(self.template_name), 200
+        return redirect('/', 302)
 
     def post(self) -> render_template:
         """Get form data
@@ -198,7 +200,7 @@ class ReturnView(MethodView):
 
                 hash = jwt.encode(payload, os.getenv(
                     "SECRET_KEY"), algorithm='HS256')
-                return redirect(url_for('success', returned=isbn, hash=hash))
-            return render_template(self.template_name, delete=True)
+                return redirect(url_for('success', returned=isbn, hash=hash), 302)
+            return render_template(self.template_name, delete=True), 400
 
-        return redirect('/')
+        return redirect('/', 302)
