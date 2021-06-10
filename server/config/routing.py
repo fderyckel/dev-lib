@@ -28,7 +28,7 @@ def security():
             print(e)
 
 
-class Login(MethodView):
+class LoginView(MethodView):
     """ This class is to handle login (limited to admins)"""
 
     def __init__(self, template_name_get) -> None:
@@ -57,7 +57,7 @@ class Login(MethodView):
         return render_template(self.template_name_get, error='Invalid User')
 
 
-class Home(MethodView):
+class HomeView(MethodView):
     """
     This is the intermediate page / home page for the admin users
     """
@@ -109,8 +109,7 @@ class IssueView(MethodView):
                 "isbn": isbn
             }
 
-            hash = jwt.encode(params, os.getenv(
-                "SECRET_KEY"))
+
 
             response = pool_request.get(url, params=params)
             if response.status_code == 200:
@@ -125,6 +124,8 @@ class IssueView(MethodView):
                 return render_template(self.template_name, taken=True)
 
             if status := issue_book(user_email=email, isbn=isbn, debt=debt) is True:
+                hash = jwt.encode(data, os.getenv(
+                "SECRET_KEY"))
                 return redirect(url_for('success', hash=hash))
 
             if status == 'debt':
@@ -142,27 +143,49 @@ class CallBack(MethodView):
         self.template_name = template_name
 
     def get(self, hash: str) -> render_template:
+        """Renders page post issue
+
+        Args:
+            hash (str): details of the book issued
+
+        Returns:
+            render_template
+        """
         if g.user:
 
             payload = jwt.decode(hash, os.getenv(
                 "SECRET_KEY"), algorithms='HS256')
+            title = payload['message'][0]['title']
+            return render_template(self.template_name, book_name=title)
 
-            params = {
-                "isbn": payload['isbn']
-            }
-            book_details = pool_request.get(url, params=params)
-            if book_details.status_code == 200:
-                data = book_details.json()
-                if result := check_errors(data):
-                    if not isinstance(result, dict):
-                        return redirect(url_for('issue'))
-
-                title = data['message'][0]['title']
-                return render_template(self.template_name, book_name=title)
-
-            return render_template(redirect(url_for('issue')))
         return redirect('/')
 
 
-class Return(MethodView):
-    pass
+class ReturnView(MethodView):
+    """
+    Class to handle book returns
+    """
+
+    def __init__(self, template_name: str) -> None:
+        self.template_name = template_name
+
+    def get(self) -> render_template:
+        if g.user:
+            return render_template(self.template_name)
+        return redirect('/')
+
+    def post(self) -> render_template:
+        """Get form data
+
+        Returns:
+            render_template
+        """
+        if g.user:
+            try:
+                isbn = request.data.get('isbn')
+                email = request.data.get('email')
+            except Exception as e:
+                print(e)
+                return render_template(self.template_name)
+
+        return redirect('/')

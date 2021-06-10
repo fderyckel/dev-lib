@@ -25,6 +25,7 @@ class Issues(db.Model):
     isbn = db.Column(db.String(20), nullable=False)
     issue_date = db.Column(db.DateTime, nullable=False,
                            default=datetime.utcnow)
+    fee = db.Column(db.Integer, nullable=False)                           
     user = db.Column(db.Integer, db.ForeignKey('member.id'), nullable=False)
 
     def __repr__(self) -> str:

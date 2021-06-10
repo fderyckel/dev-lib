@@ -14,10 +14,10 @@ db = SQLAlchemy(app)
 
 from .routing import *
 
-app.add_url_rule('/', view_func=Login.as_view(name='login',
+app.add_url_rule('/', view_func=LoginView.as_view(name='login',
                  template_name_get='login.html'))
 
-app.add_url_rule('/home', view_func=Home.as_view(name='home',
+app.add_url_rule('/home', view_func=HomeView.as_view(name='home',
                                                  template_name='home.html'))
 
 app.add_url_rule(
@@ -27,3 +27,6 @@ app.add_url_rule(
 app.add_url_rule(
     '/success/<hash>', view_func=CallBack.as_view(name='success',
                                                    template_name='success.html'))
+app.add_url_rule(
+    '/return', view_func=ReturnView.as_view(name='return',
+                                                   template_name='return.html'))

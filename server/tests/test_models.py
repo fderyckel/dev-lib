@@ -44,3 +44,5 @@ class TestIssueModel(TestCase):
     def tearDownClass(cls):
         db.session.delete(cls.member)
         db.session.commit()
+
+
