@@ -6,7 +6,7 @@ from .models import Admin
 import jwt
 import os
 import requests
-from .utils import check_errors, check_availability, issue_book
+from .utils import *
 
 db.create_all()
 db.session.commit()
@@ -109,8 +109,6 @@ class IssueView(MethodView):
                 "isbn": isbn
             }
 
-
-
             response = pool_request.get(url, params=params)
             if response.status_code == 200:
                 data = response.json()
@@ -123,15 +121,14 @@ class IssueView(MethodView):
             if check_availability(isbn=isbn) is False:
                 return render_template(self.template_name, taken=True)
 
-            if status := issue_book(user_email=email, isbn=isbn, debt=debt) is True:
+            if status := issue_book(user_email=email, isbn=isbn, debt=debt):
+                if status == 'debt':
+                    return render_template(self.template_name, debt=True)
                 hash = jwt.encode(data, os.getenv(
-                "SECRET_KEY"))
+                    "SECRET_KEY"))
                 return redirect(url_for('success', hash=hash))
 
-            if status == 'debt':
-                return render_template(self.template_name, debt=True)
-
-        return redirect('/')
+        return redirect('/issue')
 
 
 class CallBack(MethodView):
@@ -155,8 +152,13 @@ class CallBack(MethodView):
 
             payload = jwt.decode(hash, os.getenv(
                 "SECRET_KEY"), algorithms='HS256')
-            title = payload['message'][0]['title']
-            return render_template(self.template_name, book_name=title)
+            try:
+                title = payload['message'][0]['title']
+                return render_template(self.template_name, book_name=title)
+
+            except Exception as e:
+                email, isbn = payload['email'], payload['isbn']
+                return render_template(self.template_name, delete=True, isbn=isbn, email=email)
 
         return redirect('/')
 
@@ -182,10 +184,21 @@ class ReturnView(MethodView):
         """
         if g.user:
             try:
-                isbn = request.data.get('isbn')
-                email = request.data.get('email')
+                isbn = request.form.get('isbn')
+                email = request.form.get('email')
             except Exception as e:
                 print(e)
                 return render_template(self.template_name)
+            if return_books(isbn=isbn, email=email) is True:
+
+                payload = {
+                    "isbn": isbn,
+                    "email": email
+                }
+
+                hash = jwt.encode(payload, os.getenv(
+                    "SECRET_KEY"), algorithm='HS256')
+                return redirect(url_for('success', returned=isbn, hash=hash))
+            return render_template(self.template_name, delete=True)
 
         return redirect('/')

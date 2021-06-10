@@ -65,11 +65,7 @@
             <input type="text" id="date" name="isnb" style="	outline: none; border: none;"><br><br>
 
             <button class="cta" style="margin-top: 10px;" type="submit" name="b">Search</button>
-
-            {% if multiple %}
-            <h2>Isbn entred does not match the book title.</h2>
-            {% endif %}
-            
+          
             {% if not_available %}
                 <h1>NOT AVAILABLE</h1>
             {% endif %}
@@ -79,7 +75,7 @@
             {% endif %}
 
             {% if debt %}
-                <h3>Member debt is above Rs.500 please return the issued books before getting new ones</h3>
+                <h1>Member debt is above Rs.500 please return the issued books before getting new ones</h1>
             {% endif %}
 
         </form>

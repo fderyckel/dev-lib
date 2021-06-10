@@ -102,15 +102,17 @@ def return_books(isbn: str, email: str) -> bool:
         bool: return True if record deleted
     """
 
-    if member := Member.query.fiter_by(user_email=email):
+    if member := Member.query.filter_by(user_email=email).first():
         """ Member exists """
         issues = member.issue
         if issues:
             """ Has issued books"""
             for issue in issues:
                 if issue.isbn == isbn:
+                    member.debt -= issue.fee
+                    db.session.add(member)
                     db.session.delete(issue)
-                    db.commit()
+                    db.session.commit()
                     return True
 
         return False

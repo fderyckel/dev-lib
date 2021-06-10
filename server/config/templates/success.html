@@ -59,6 +59,15 @@
                     <h1>{{book_name}}</h1>
                 {% endif %}
 
+                {% if returned %}
+                    <h1>Book Returned!</h1>
+                    {{returned}}
+                {% endif %}
+
+                {% if delete %}
+                    <h1>Removed Book! {{isbn}}</h1>
+                    <h1>For {{email}}</h1>                    
+                {% endif %}
                 <br><br>
                 <button class="cta" onclick="goBack()">Go Back</button>
       </div>

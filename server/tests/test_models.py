@@ -29,7 +29,7 @@ class TestIssueModel(TestCase):
         cls.member = Member(user_email='localhost@gmail.com', debt=10)
         db.session.add(cls.member)
         db.session.commit()
-        cls.issue = Issues(isbn=123, user=cls.member.id)
+        cls.issue = Issues(isbn=123, user=cls.member.id, fee=100)
 
     def test_valid_entry(self):
         self.assertIsInstance(self.issue, Issues)
