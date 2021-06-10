@@ -1,6 +1,7 @@
 from config import db
 from datetime import datetime
 
+
 class Admin(db.Model):
     """
     Model for admins (lib inchange)
@@ -21,12 +22,25 @@ class Issues(db.Model):
     """
 
     id = db.Column(db.Integer, primary_key=True)
-    user_email = db.Column(db.String(250), nullable=False, unique=True)
-    book_name = db.Column(db.String(30), nullable=False)
-    book_id = db.Column(db.Integer, nullable=False)
-    isbn = db.Column(db.Integer, nullable=False)
-    debt = db.Column(db.Integer)
-    issue_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    isbn = db.Column(db.String(20), nullable=False)
+    issue_date = db.Column(db.DateTime, nullable=False,
+                           default=datetime.utcnow)
+    user = db.Column(db.Integer, db.ForeignKey('member.id'), nullable=False)
 
     def __repr__(self) -> str:
+        return str(self.isbn)
+
+
+class Member(db.Model):
+    """
+    Model for maintaining Member records
+    to reference book issues.    
+    """
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_email = db.Column(db.String(250), nullable=False, unique=True)
+    debt = db.Column(db.Integer)
+    issue = db.relationship('Issues', backref='user_issued', lazy=True)
+
+    def __repr__(self) -> db.Model:
         return str(self.user_email)

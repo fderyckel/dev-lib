@@ -2,12 +2,16 @@
 from flask.views import MethodView
 from config import app, db
 from flask import render_template, session, g, request, redirect, url_for
-from .models import Admin, Issues
+from .models import Admin
+import jwt
+import os
 import requests
+from .utils import check_errors, check_availability, issue_book
 
 db.create_all()
 db.session.commit()
 pool_request = requests.Session()
+url = 'https://frappe.io/api/method/frappe-library'
 
 
 @app.before_request
@@ -67,6 +71,7 @@ class Home(MethodView):
         """
         if g.user:
             return render_template(self.template_name)
+
         return redirect('/')
 
 
@@ -77,7 +82,6 @@ class IssueView(MethodView):
 
     def __init__(self, template_name) -> None:
         self.template_name = template_name
-        self.url = 'https://frappe.io/api/method/frappe-library'
 
     def get(self) -> render_template:
         """
@@ -95,40 +99,68 @@ class IssueView(MethodView):
             try:
                 debt = int(request.form.get('debt'))
                 email = request.form.get('email')
-                title = request.form.get('title')
-                isbn = int(request.form.get('isnb'))
-
-                params = {
-                    "title": title,
-                    "isbn": isbn
-                }
-
-                response = pool_request.get(self.url, params=params)
-                if response.status_code == 200:
-                    data = response.json()
-                    if 'error' in data.keys():
-                        return render_template(self.template_name, not_available=True)
-                else:
-                    return render_template(self.template_name, not_available=True)
-
-                if Issues.query.filter_by(isbn=isbn).first():
-                    print("broke here exists")
-                    return render_template(self.template_name, not_available=True, taken=True)
-
-                if len(data.json()['message']) > 1:
-                    return render_template(self.template_name, multiple=True)
-
-                issue = Issues(user_email=email, isbn=isbn,
-                               book_name=title, book_id=int(data['message'][0]['bookID']), debt=debt)
-
-                db.session.add(issue)
-                db.session.commit()
-                return redirect(url_for('home'))
+                isbn = request.form.get('isnb')
 
             except Exception as e:
                 print(e)
                 return render_template(self.template_name)
 
+            params = {
+                "isbn": isbn
+            }
+
+            hash = jwt.encode(params, os.getenv(
+                "SECRET_KEY"))
+
+            response = pool_request.get(url, params=params)
+            if response.status_code == 200:
+                data = response.json()
+                if result := check_errors(data=data):
+                    if not isinstance(result, dict):
+                        return render_template(self.template_name, not_available=True)
+            else:
+                return render_template(self.template_name, not_available=True)
+
+            if check_availability(isbn=isbn) is False:
+                return render_template(self.template_name, taken=True)
+
+            if status := issue_book(user_email=email, isbn=isbn, debt=debt) is True:
+                return redirect(url_for('success', hash=hash))
+
+            if status == 'debt':
+                return render_template(self.template_name, debt=True)
+
+        return redirect('/')
+
+
+class CallBack(MethodView):
+    """
+    Class for successful issue
+    """
+
+    def __init__(self, template_name: str) -> None:
+        self.template_name = template_name
+
+    def get(self, hash: str) -> render_template:
+        if g.user:
+
+            payload = jwt.decode(hash, os.getenv(
+                "SECRET_KEY"), algorithms='HS256')
+
+            params = {
+                "isbn": payload['isbn']
+            }
+            book_details = pool_request.get(url, params=params)
+            if book_details.status_code == 200:
+                data = book_details.json()
+                if result := check_errors(data):
+                    if not isinstance(result, dict):
+                        return redirect(url_for('issue'))
+
+                title = data['message'][0]['title']
+                return render_template(self.template_name, book_name=title)
+
+            return render_template(redirect(url_for('issue')))
         return redirect('/')
 
 

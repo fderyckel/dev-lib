@@ -55,30 +55,33 @@
             <div>
                 <h1>To Issue Books Fill In The Form<span></span></h1>
         <form id="sympform" action="" method="post" >
-            <label for="name" style="font-size: x-large; color: #f2dac3;">Debt</label>
+            <label for="name" style="font-size: x-large; color: #f2dac3;">Amount</label>
             <input type="text" id="name" name="debt" style="	outline: none; border: none;"><br><br>
 
             <label for="id" style="font-size: x-large; color: #f2dac3;">Email ID</label>
             <input type="text" id="id" name="email" style="	outline: none; border: none;"><br><br>
 
-            <label for="book" style="font-size: x-large; color: #f2dac3;">Title</label>
-            <input type="text" id="book" name="title" style="	outline: none; border: none;"><br><br>
-
             <label for="date" style="font-size: x-large; color: #f2dac3;">ISBN</label>
             <input type="text" id="date" name="isnb" style="	outline: none; border: none;"><br><br>
 
             <button class="cta" style="margin-top: 10px;" type="submit" name="b">Search</button>
-             {% if multiple %}
-                <h2>Isbn entred does not match the book title.</h2>
-             {% endif %}
+
+            {% if multiple %}
+            <h2>Isbn entred does not match the book title.</h2>
+            {% endif %}
             
             {% if not_available %}
-                {% if taken %}
-                    <H1>Book Taken</H1>
-                {% endif %}
                 <h1>NOT AVAILABLE</h1>
             {% endif %}
-        
+
+            {% if taken %}
+                    <H1>Book Taken</H1>
+            {% endif %}
+
+            {% if debt %}
+                <h3>Member debt is above Rs.500 please return the issued books before getting new ones</h3>
+            {% endif %}
+
         </form>
 
 

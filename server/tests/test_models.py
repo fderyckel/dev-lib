@@ -44,3 +44,6 @@ class TestIssueModel(TestCase):
     @classmethod
     def tearDownClass(cls):
         pass
+
+class TestMemberModel(db.Model):
+    pass
