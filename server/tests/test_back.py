@@ -90,7 +90,7 @@ class TestIssueAuthorized(TestCase):
         }
         pool.post(url, data)
 
-    def test_valid_login(self) -> None:
+    def test_valid_access(self) -> None:
         """Assert access to authenticated users
         """
         url = 'http://localhost:5000/issue'
@@ -98,6 +98,31 @@ class TestIssueAuthorized(TestCase):
         self.assertEqual(response.status_code, 200)
         codes = [code.status_code for code in response.history]
         self.assertNotIn(302, codes)
+
+    def test_issue_valid(self):
+        """Test valid issue assert redirection to success page
+           post valid issue remove issue from db post successful
+           redirection
+        """
+        data = {
+            "email": "testuser@localhost.com",
+            "isbn": "184416411X",
+            "debt": 100
+        }
+
+        url = 'http://localhost:5000/issue'
+        response = pool.post(url, data=data)
+        codes = [code.status_code for code in response.history]
+        self.assertIn(302, codes)
+
+        url = 'http://localhost:5000/return'
+        data = {
+            "email": "testuser@localhost.com",
+            "isbn": "184416411X"
+        }
+        response = pool.post(url, data=data)
+        codes = [code.status_code for code in response.history]
+        self.assertIn(302, codes)
 
     @classmethod
     def tearDownClass(cls):
