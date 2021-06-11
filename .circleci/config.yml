@@ -19,7 +19,7 @@ jobs:
           name: Run Server
           command: |
             . dev/bin/activate
-            python run.py 
+            python server/run.py 
           background: True
 
       - run:
