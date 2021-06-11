@@ -20,7 +20,7 @@ jobs:
           command: |
             . dev/bin/activate
             python server/run.py 
-          background: True
+          background: true
 
       - run:
           name: run tests

@@ -27,7 +27,10 @@ class TestLogin(TestCase):
             "password": "libuser"
         }
         response = pool.post(self.url, data=body)
+        code = [code.status_code for code in response.history]
+        self.assertIn(302, code)
         self.assertEqual(response.status_code, 200)
+        
 
     def test_login_invalid_user(self):
         body = {
