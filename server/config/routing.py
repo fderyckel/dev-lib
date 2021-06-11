@@ -55,8 +55,8 @@ class LoginView(MethodView):
                 session['user_email'] = email
                 return redirect(url_for('home'), 302)
             else:
-                return render_template(self.template_name_get, error='Invalid password'), 400
-        return render_template(self.template_name_get, error='Invalid User'), 400
+                return render_template(self.template_name_get, error='Invalid password'), 401
+        return render_template(self.template_name_get, error='Invalid User'), 401
 
 
 class HomeView(MethodView):
