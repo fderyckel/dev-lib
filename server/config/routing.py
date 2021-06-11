@@ -118,14 +118,14 @@ class IssueView(MethodView):
                     if not isinstance(result, dict):
                         return render_template(self.template_name, not_available=True)
             else:
-                return render_template(self.template_name, not_available=True)
+                return render_template(self.template_name, not_available=True), 200
 
             if check_availability(isbn=isbn, email=email) is False:
-                return render_template(self.template_name, taken=True)
+                return render_template(self.template_name, taken=True), 200
 
             if status := issue_book(user_email=email, isbn=isbn, debt=debt):
                 if status == 'debt':
-                    return render_template(self.template_name, debt=True)
+                    return render_template(self.template_name, debt=True), 200
                 hash = jwt.encode(data, os.getenv(
                     "SECRET_KEY"))
                 return redirect(url_for('success', hash=hash), code=302)
