@@ -1,4 +1,5 @@
 
+from typing import Dict, List
 from flask.views import MethodView
 from config import app, db
 from flask import (
@@ -154,6 +155,16 @@ class CallBack(MethodView):
 
             payload = jwt.decode(hash, os.getenv(
                 "SECRET_KEY"), algorithms='HS256')
+
+            try:
+                search_status = payload['search']
+                if search_status:
+                    title = payload['message'][0]['title']
+                    isbn = payload['message'][0]['isbn']
+                    return render_template(self.template_name, search=search_status, isbn=isbn, title=title), 200
+            except Exception as e:
+                print(e)
+
             try:
                 title = payload['message'][0]['title']
                 return render_template(self.template_name, book_name=title), 200
@@ -202,5 +213,49 @@ class ReturnView(MethodView):
                     "SECRET_KEY"), algorithm='HS256')
                 return redirect(url_for('success', returned=isbn, hash=hash), 302)
             return render_template(self.template_name, delete=True), 400
+
+        return redirect('/', 302)
+
+
+class Search(MethodView):
+    """View for searching books by name and author
+    """
+
+    def __init__(self, template_name: str) -> None:
+        self.template_name = template_name
+
+    def get(self) -> render_template:
+        """Render page for logged in users
+        """
+        if g.user:
+            return render_template(self.template_name), 200
+        return redirect('/', code=302)
+
+    def post(self) -> None:
+        """Handle form data
+        """
+        if g.user:
+            try:
+                author = request.form.get('author')
+                title = request.form.get('title')
+            except Exception as e:
+                return render_template(self.template_name), 400
+
+            params = {
+                "author": author,
+                "title": title
+            }
+
+            response = pool_request.get(url, params=params)
+            if response.status_code == 200:
+                data = response.json()
+
+                if result := check_errors(data):
+                    if not isinstance(result, dict):
+                        return render_template(self.template_name, not_found=True), 400
+
+                data['search'] = True
+                hash = jwt.encode(data, os.getenv('SECRET_KEY'))
+                return redirect(url_for('success', hash=hash), code=302)
 
         return redirect('/', 302)

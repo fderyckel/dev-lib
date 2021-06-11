@@ -30,3 +30,7 @@ app.add_url_rule(
 app.add_url_rule(
     '/return', view_func=ReturnView.as_view(name='return',
                                                    template_name='return.html'))
+
+app.add_url_rule(
+    '/search', view_func=Search.as_view(name='search',
+                                                   template_name='search.html'))

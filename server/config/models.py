@@ -25,7 +25,7 @@ class Issues(db.Model):
     isbn = db.Column(db.String(20), nullable=False)
     issue_date = db.Column(db.DateTime, nullable=False,
                            default=datetime.utcnow)
-    fee = db.Column(db.Integer, nullable=False)                           
+    fee = db.Column(db.Integer, nullable=False)
     user = db.Column(db.Integer, db.ForeignKey('member.id'), nullable=False)
 
     def __repr__(self) -> str:
@@ -41,7 +41,8 @@ class Member(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_email = db.Column(db.String(250), nullable=False, unique=True)
     debt = db.Column(db.Integer)
-    issue = db.relationship('Issues', backref='user_issued', lazy=True, cascade="all, delete")
+    issue = db.relationship('Issues', backref='user_issued',
+                            lazy=True, cascade="all, delete")
 
     def __repr__(self) -> db.Model:
         return str(self.user_email)
