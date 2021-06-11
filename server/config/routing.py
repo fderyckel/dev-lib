@@ -101,7 +101,7 @@ class IssueView(MethodView):
             try:
                 debt = int(request.form.get('debt'))
                 email = request.form.get('email')
-                isbn = request.form.get('isnb')
+                isbn = request.form.get('isbn')
 
             except Exception as e:
                 print(e)
@@ -120,7 +120,7 @@ class IssueView(MethodView):
             else:
                 return render_template(self.template_name, not_available=True)
 
-            if check_availability(isbn=isbn) is False:
+            if check_availability(isbn=isbn, email=email) is False:
                 return render_template(self.template_name, taken=True)
 
             if status := issue_book(user_email=email, isbn=isbn, debt=debt):
@@ -128,9 +128,9 @@ class IssueView(MethodView):
                     return render_template(self.template_name, debt=True)
                 hash = jwt.encode(data, os.getenv(
                     "SECRET_KEY"))
-                return redirect(url_for('success', hash=hash))
+                return redirect(url_for('success', hash=hash), code=302)
 
-        return redirect('/issue')
+        return redirect('/issue', 302)
 
 
 class CallBack(MethodView):

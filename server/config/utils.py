@@ -24,17 +24,24 @@ def check_errors(data: Dict[str, List]) -> bool:
     return
 
 
-def check_availability(isbn: str) -> bool:
+def check_availability(isbn: str, email: str) -> bool:
     """Checks the availability of the book if less than 10 members have
        Issued returns true else returns false
 
     Args:
         isbn (str): unique book identifier
+        email (str): email id of member
 
     Returns:
         bool: True if book available false if not
     """
     issued = Issues.query.filter_by(isbn=isbn).all()
+    member = Member.query.filter_by(user_email=email).first()
+    if member:
+        for issue in member.issue:
+            if str(issue) == isbn:
+                """ Member already issued book """
+                return False
 
     if len(issued) > 10:
         return False
