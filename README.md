@@ -22,5 +22,7 @@
 
 ``` 
 cd dev-lib
+pip install -r requirements.txt
+export SECRET_KEY=localhost_secret_key
 python3 server/run.py
 ```
