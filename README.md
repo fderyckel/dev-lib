@@ -17,8 +17,9 @@
 ![image](images/7.png)
 ![image](images/8.png)
 
-> git clone https://github.com/Aradhya-Tripathi/dev-lib 
+> git clone https://github.com/Aradhya-Tripathi/dev-lib
 
+> login credentials -> email: libuser@localhost.com password: libuser
 
 ``` 
 cd dev-lib
