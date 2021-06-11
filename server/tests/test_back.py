@@ -99,7 +99,7 @@ class TestIssueAuthorized(TestCase):
         codes = [code.status_code for code in response.history]
         self.assertNotIn(302, codes)
 
-    def test_issue_valid(self):
+    def test_issue_valid(self) -> None:
         """Test valid issue assert redirection to success page
            post valid issue remove issue from db post successful
            redirection
@@ -112,8 +112,15 @@ class TestIssueAuthorized(TestCase):
 
         url = 'http://localhost:5000/issue'
         response = pool.post(url, data=data)
+        response_multiple_inserts = pool.post(url, data)
+        codes = [code.status_code for code in response.history]
+        multiple_inserts_codes = [
+            code.status_code for code in response_multiple_inserts.history]
+
         codes = [code.status_code for code in response.history]
         self.assertIn(302, codes)
+        self.assertEqual(response_multiple_inserts.status_code, 200)
+        self.assertNotIn(302, multiple_inserts_codes)
 
         url = 'http://localhost:5000/return'
         data = {
@@ -121,7 +128,7 @@ class TestIssueAuthorized(TestCase):
             "isbn": "184416411X"
         }
         response = pool.post(url, data=data)
-        codes = [code.status_code for code in response.history]
+
         self.assertIn(302, codes)
 
     @classmethod

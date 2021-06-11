@@ -41,7 +41,7 @@ class Member(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_email = db.Column(db.String(250), nullable=False, unique=True)
     debt = db.Column(db.Integer)
-    issue = db.relationship('Issues', backref='user_issued', lazy=True)
+    issue = db.relationship('Issues', backref='user_issued', lazy=True, cascade="all, delete")
 
     def __repr__(self) -> db.Model:
         return str(self.user_email)
