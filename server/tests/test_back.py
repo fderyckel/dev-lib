@@ -170,8 +170,15 @@ class TestReturn(TestCase):
         }
         response = pool.post('http://localhost:5000/return', data=data)
         self.assertNotEqual(response.status_code, 400)
-        
+
         codes = [code.status_code for code in response.history]
-        
+
         self.assertIn(302, codes)
 
+    @classmethod
+    def tearDwonClass(cls):
+        """log user out post all tests
+           (remove user from session)
+        """
+        url = 'http://localhost:5000/'
+        pool.get(url)
