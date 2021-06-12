@@ -141,4 +141,37 @@ class TestIssueAuthorized(TestCase):
 
 
 class TestReturn(TestCase):
-    pass
+    @classmethod
+    def setUpClass(cls):
+        """Issue book as setup to test return
+        """
+        url = 'http://localhost:5000/'
+        data = {
+            "email": "libuser@localhost.com",
+            "password": "libuser"
+        }
+        pool.post(url, data)
+
+        data = {
+            "email": "testuser@localhost.com",
+            "isbn": "184416411X",
+            "debt": 100
+        }
+
+        url = 'http://localhost:5000/issue'
+        response = pool.post(url, data=data)
+
+    def test_return(self):
+        """Assert return response
+        """
+        data = {
+            "email": "testuser@localhost.com",
+            "isbn": "184416411X",
+        }
+        response = pool.post('http://localhost:5000/return', data=data)
+        self.assertNotEqual(response.status_code, 400)
+        
+        codes = [code.status_code for code in response.history]
+        
+        self.assertIn(302, codes)
+
