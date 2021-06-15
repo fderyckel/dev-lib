@@ -15,17 +15,13 @@ jobs:
             . dev/bin/activate
             pip install -r requirements.txt
 
-      - run:
-          name: Run Server
-          command: |
-            . dev/bin/activate
-            python server/run.py 
-          background: true
 
       - run:
           name: run tests
           command: |
             . dev/bin/activate
             cd server/
+            python -m run.py 
+            background: true
             python -m unittest tests/test_models.py
             python -m unittest tests/test_back.py
