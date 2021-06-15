@@ -27,7 +27,6 @@ jobs:
           command: |
             . dev/bin/activate
             cd server/
-            gunicorn run:app --bind=127.0.0.1:5000   --pid=gunicorn.txt --daemon
             sleep 3
             python -m unittest tests/test_models.py
             python -m unittest tests/test_back.py
